@@ -19,7 +19,7 @@
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
-(setq doom-font (font-spec :family "monospace" :size 14))
+(setq doom-font (font-spec :family "monospace" :size 15))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
@@ -30,12 +30,13 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-;; ORG-MODE CONFIGURATION
 (after! org
   ;; Set org directory
-  (setq org-directory "~eoin/Dropbox/Todos")
+  (setq org-directory "~eoin/Dropbox/Org")
   ;; Set agenda files
-  (setq org-agenda-files (list org-directory))
+  (setq org-agenda-files (list (concat org-directory "/" "Todos")))
+  ;; Set archive location
+  (setq org-archive-location (concat org-directory "/" "Archive"))
   ;; Set task states
   (setq org-todo-keywords
         (quote ((sequence "SHAPE(p!)" "TODO(t!)" "NEXT(n!)" "SCHEDULED(e!)" "STARTED(s!)" "ONHOLD(o@/!)" "WITH(w@/!)" "|" "CANCELLED(c@/!)" "DONE(d@/!)")
@@ -43,8 +44,23 @@
   ;; No heads-up for upcoming deadlines
   (setq org-deadline-warning-days 0)
 )
-;; END ORG-MODE CONFIGURATION
-
+;;
+(setq deft-directory "~eoin/Dropbox/Org/Notes")
+(setq deft-extensions '("txt" "org" "md"))
+(setq deft-recursive t)
+;;
+(use-package! org-roam
+  :commands (org-roam-insert org-roam-find-file org-roam)
+  :init
+  (setq org-roam-directory "~eoin/Dropbox/Org/Notes")
+  (map! :leader
+        :prefix "n"
+        :desc "Org-Roam-Insert" "i" #'org-roam-insert
+        :desc "Org-Roam-Find"   "/" #'org-roam-find-file
+        :desc "Org-Roam-Buffer" "r" #'org-roam)
+  :config
+  (org-roam-mode +1)
+)
 ;;
 ;; - `load!' for loading external *.el files relative to this one
 ;; - `use-package' for configuring packages
